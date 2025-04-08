@@ -1,0 +1,3 @@
+/home/kezjo/project/计软基础/build/CMakeFiles/test1.dir
+/home/kezjo/project/计软基础/build/CMakeFiles/edit_cache.dir
+/home/kezjo/project/计软基础/build/CMakeFiles/rebuild_cache.dir

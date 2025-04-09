@@ -3,7 +3,7 @@
 #include "../include/sparse_matrix.hpp"
 
 
-int SparseMatrix::addElement(int row, int col, double value) {
+int SparseMatrix::addElement(int row, int col, int value) {
     if (matrix_data.size() >= max_size) {
         std::cerr << "matrix_data size overflow" << std::endl;
         return 0;

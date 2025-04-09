@@ -13,20 +13,17 @@
 struct MatrixElement {
     int row;
     int col;
-    double value;
+    int value;
 };
 
 
-/**
- * @name SparseMatrix class
- */
 class SparseMatrix {
 public:
     SparseMatrix(){
         // TODO by kezjo
     }
 
-    int addElement(int row, int col, double value);
+    int addElement(int row, int col, int value);
 
     void output(const std::vector<MatrixElement>& matrix);
 

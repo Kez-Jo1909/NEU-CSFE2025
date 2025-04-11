@@ -14,6 +14,7 @@ struct MatrixElement {
 };
 
 
+
 class SparseMatrix {
 public:
     SparseMatrix(){
@@ -23,6 +24,10 @@ public:
     int addElement(int row, int col, int value){
         if (matrix_data.size() >= max_size) {
             std::cerr << "matrix_data size overflow" << std::endl;
+            return 0;
+        }
+        if(row < 0 || row >= 3 || col < 0 || col >= 3) {
+            std::cerr << "row or col out of range" << std::endl;
             return 0;
         }
         MatrixElement element = {row, col, value};
@@ -82,15 +87,81 @@ private:
     std::vector<MatrixElement> transposed_matrix_data;
 };
 
+SparseMatrix MatrixAdd(SparseMatrix& matrix_A, SparseMatrix& matrix_B) {
+    SparseMatrix result;
+    std::vector<MatrixElement> data_A = matrix_A.getMatrixData();
+    std::vector<MatrixElement> data_B = matrix_B.getMatrixData();
+    for(const auto& element : data_B){
+        bool element_found = false;
+        for(auto& element_A : data_A){
+            if(element.row == element_A.row && element.col == element_A.col){
+                // 如果在矩阵A中，相加
+                element_A.value += element.value;
+                element_found = true;
+                break;
+            }
+        }
+        if(!element_found){
+            data_A.push_back(element);
+        }
+    }
+
+    for(const auto& element : data_A){
+        result.addElement(element.row, element.col, element.value);
+    }
+
+    return result;
+}
+
 
 int main() {
-    SparseMatrix matrix;
-    matrix.addElement(0, 0, 1.0);
-    matrix.addElement(0, 1, 2.0);
-    matrix.output(matrix.getMatrixData());
-    std::cout << "------------------------" << std::endl;
-    matrix.transpose();
-    matrix.output(matrix.getTransposedMatrixData());
-    std::cout << "------------------------" << std::endl;
+    // TODO
+    SparseMatrix matrix_A;
+    
+    while(1){
+        int row, col, value;
+        std::cout << "输入矩阵元素的行、列和数值(-1结束): ";
+        std::cin >> row;
+        if(row == -1){
+            break;
+        }
+        std::cin >> col >> value;
+        int ret = matrix_A.addElement(row, col, value);
+        if(ret == 0){
+            std::cerr << "添加矩阵元素失败" << std::endl;
+            break;
+        }
+    }
+
+    std::cout << "原矩阵:" << std::endl;
+    matrix_A.output(matrix_A.getMatrixData());
+    std::cout << "转置矩阵:" << std::endl;
+    int ret = matrix_A.transpose();
+    if(ret == 0){
+        std::cerr << "转置矩阵失败" << std::endl;
+        return 0;
+    }
+    matrix_A.output(matrix_A.getTransposedMatrixData());
+
+    // 矩阵B
+    SparseMatrix matrix_B;
+    while(1){
+        int row, col, value;
+        std::cout << "输入矩阵元素的行、列和数值(-1结束): ";
+        std::cin >> row;
+        if(row == -1){
+            break;
+        }
+        std::cin >> col >> value;
+        int ret = matrix_B.addElement(row, col, value);
+        if(ret == 0){
+            std::cerr << "添加矩阵元素失败" << std::endl;
+            break;
+        }
+    }
+
+    SparseMatrix matrix_sum = MatrixAdd(matrix_A, matrix_B);
+    std::cout << "A+B:" << std::endl;
+    matrix_sum.output(matrix_sum.getMatrixData());
     return 0;
 }
